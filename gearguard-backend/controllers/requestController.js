@@ -95,3 +95,66 @@ export const closeRequest = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+export const getKanban = async (req, res) => {
+  try {
+    let filter = {};
+
+    // If technician → only show their team's requests
+    if (req.user.role === "technician") {
+      const user = await User.findById(req.user.id);
+      filter.team = user.team;
+    }
+
+    const requests = await Request.find(filter)
+      .populate("equipment")
+      .populate("assignedTo", "name")
+      .sort({ createdAt: -1 });
+
+    const kanban = {
+      new: [],
+      "in-progress": [],
+      repaired: [],
+      scrap: []
+    };
+
+    requests.forEach(r => {
+      kanban[r.status].push(r);
+    });
+
+    res.json(kanban);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getCalendar = async (req, res) => {
+  try {
+    let filter = { type: "preventive" };
+
+    // Technicians see only their team's preventive jobs
+    if (req.user.role === "technician") {
+      const user = await User.findById(req.user.id);
+      filter.team = user.team;
+    }
+
+    const requests = await Request.find(filter)
+      .populate("equipment", "name")
+      .populate("assignedTo", "name");
+
+    const calendar = {};
+
+    requests.forEach(r => {
+      const date = r.scheduledDate?.toISOString().split("T")[0];
+      if (!calendar[date]) calendar[date] = [];
+      calendar[date].push(r);
+    });
+
+    res.json(calendar);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -7,6 +7,7 @@ import protect from "./middleware/auth.js";
 import equipmentRoutes from "./routes/equipmentRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import requestRoutes from "./routes/requestRoutes.js";
+import sensorRoutes from "./routes/sensorRoutes.js";
 
 dotenv.config();
 
@@ -39,3 +40,5 @@ app.use("/api/equipment", equipmentRoutes);
 app.use("/api/teams", teamRoutes);
 
 app.use("/api/requests", requestRoutes);
+
+app.use("/api/sensors", sensorRoutes);
