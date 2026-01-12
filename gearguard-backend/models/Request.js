@@ -8,8 +8,14 @@ const requestSchema = new mongoose.Schema({
 
   type: {
     type: String,
-    enum: ["corrective", "preventive"],
+    enum: ["corrective","preventive","predictive"],
     required: true
+  },
+
+  priority: {
+    type: String,
+    enum: ["low","medium","high"],
+    default: "medium"
   },
 
   equipment: {
@@ -42,6 +48,7 @@ const requestSchema = new mongoose.Schema({
   duration: {
     type: Number   // hours spent
   },
+  aiExplanation: String,
 
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,

@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report
+import joblib
 
 # Load data
 data = pd.read_csv("dataset.csv")
@@ -34,3 +35,6 @@ print(classification_report(data["failed"], data["predicted"]))
 # Show few risky samples
 print("\nSample detected risky readings:")
 print(data[data["predicted"] == 1].head())
+
+joblib.dump(model, "anomaly_model.pkl")
+joblib.dump(scaler, "scaler.pkl")

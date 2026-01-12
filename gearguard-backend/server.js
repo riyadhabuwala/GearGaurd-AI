@@ -1,15 +1,14 @@
+import "dotenv/config";
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
-import protect from "./middleware/auth.js";
+import {protect} from "./middleware/auth.js";
 import equipmentRoutes from "./routes/equipmentRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import requestRoutes from "./routes/requestRoutes.js";
 import sensorRoutes from "./routes/sensorRoutes.js";
-
-dotenv.config();
+import aiRoutes from "./routes/aiRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -42,3 +41,5 @@ app.use("/api/teams", teamRoutes);
 app.use("/api/requests", requestRoutes);
 
 app.use("/api/sensors", sensorRoutes);
+
+app.use("/api/ai", aiRoutes);

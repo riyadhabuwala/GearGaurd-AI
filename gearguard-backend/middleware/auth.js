@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const protect = (req, res, next) => {
+export const protect = (req, res, next) => {
   try {
     const header = req.headers.authorization;
 
@@ -19,5 +19,10 @@ const protect = (req, res, next) => {
     return res.status(401).json({ message: "Token invalid" });
   }
 };
+export const adminOnly = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Admin access only" });
+  }
+  next();
+};
 
-export default protect;

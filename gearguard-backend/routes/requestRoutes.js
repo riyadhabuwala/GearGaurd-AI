@@ -1,5 +1,5 @@
 import express from "express";
-import protect from "../middleware/auth.js";
+import {protect} from "../middleware/auth.js";
 import { createRequest, assignToMe, closeRequest } from "../controllers/requestController.js";
 import { getKanban } from "../controllers/requestController.js";
 import { getCalendar } from "../controllers/requestController.js";
