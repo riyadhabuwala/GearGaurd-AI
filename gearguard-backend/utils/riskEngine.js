@@ -1,7 +1,16 @@
-export const computePriority = (temp, vib, pastFailures) => {
-  let score = temp * 0.4 + vib * 10 * 0.4 + pastFailures * 10 * 0.2;
+export const computeRiskScore = (row) => {
+  let score = 0;
 
-  if (score > 80) return "high";
-  if (score > 50) return "medium";
+  if (row.temperature > 80) score += 30;
+  if (row.vibration > 7) score += 30;
+  if (row.power > 12) score += 20;
+  if (row.runtime > 8) score += 20;
+
+  return Math.min(score, 100);
+};
+
+export const computePriority = (risk) => {
+  if (risk >= 70) return "high";
+  if (risk >= 40) return "medium";
   return "low";
 };

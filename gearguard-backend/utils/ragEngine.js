@@ -8,9 +8,13 @@ export const getFailureHistory = async (equipmentId) => {
     .sort({ createdAt: -1 })
     .limit(5);
 
-  return failures.map(f => ({
-    date: f.createdAt,
-    subject: f.subject,
-    duration: f.duration
-  }));
+  if (failures.length === 0) {
+    return "No previous failures recorded.";
+  }
+
+  return failures
+    .map(f => {
+      return `Date: ${f.createdAt.toISOString().split("T")[0]}, Issue: ${f.subject}, Downtime: ${f.duration || "unknown"} hours`;
+    })
+    .join("\n");
 };
