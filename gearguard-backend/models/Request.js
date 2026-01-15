@@ -50,6 +50,11 @@ const requestSchema = new mongoose.Schema({
   },
   aiExplanation: String,
 
+  autoAssigned: {
+    type: Boolean,
+    default: false
+  },
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"

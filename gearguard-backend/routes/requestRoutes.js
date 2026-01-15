@@ -2,6 +2,7 @@ import express from "express";
 import { protect, adminOnly } from "../middleware/auth.js";
 import {
 	getAllRequestsAdmin,
+	getMyRequests,
 	createRequest,
 	assignToMe,
 	assignToTechnician,
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.post("/", protect, createRequest);
 router.get("/", protect, adminOnly, getAllRequestsAdmin);
+router.get("/my", protect, getMyRequests);
 router.put("/:id/assign", protect, assignToMe);
 router.put("/:id/assign-to", protect, adminOnly, assignToTechnician);
 router.put("/:id/reassign", protect, adminOnly, reassignToTechnician);

@@ -8,13 +8,64 @@ export const createRequest = async (req, res) => {
     const eq = await Equipment.findById(equipment).populate("assignedTeam");
     if (!eq) return res.status(404).json({ message: "Equipment not found" });
 
+    let assignedTo = null;
+    let status = "new";
+    let autoAssigned = false;
+
+    const autoAssignEnabled = String(process.env.AUTO_ASSIGN_TECHNICIAN || "").toLowerCase() === "true";
+    if (autoAssignEnabled && eq.assignedTeam?._id) {
+      const technicians = await User.find({ role: "technician", team: eq.assignedTeam._id }).select("_id");
+      const techIds = technicians.map((t) => t._id);
+
+      if (techIds.length > 0) {
+        const [openAgg, solvedAgg] = await Promise.all([
+          Request.aggregate([
+            { $match: { assignedTo: { $in: techIds }, status: { $in: ["new", "in-progress"] } } },
+            { $group: { _id: "$assignedTo", openJobs: { $sum: 1 } } }
+          ]),
+          Request.aggregate([
+            { $match: { assignedTo: { $in: techIds }, status: "repaired" } },
+            { $group: { _id: "$assignedTo", solvedJobs: { $sum: 1 } } }
+          ])
+        ]);
+
+        const openMap = new Map(openAgg.map((x) => [String(x._id), x.openJobs]));
+        const solvedMap = new Map(solvedAgg.map((x) => [String(x._id), x.solvedJobs]));
+
+        let bestId = techIds[0];
+        let bestOpen = openMap.get(String(bestId)) ?? 0;
+        let bestSolved = solvedMap.get(String(bestId)) ?? 0;
+
+        for (const id of techIds) {
+          const openJobs = openMap.get(String(id)) ?? 0;
+          const solvedJobs = solvedMap.get(String(id)) ?? 0;
+
+          if (openJobs < bestOpen) {
+            bestOpen = openJobs;
+            bestSolved = solvedJobs;
+            bestId = id;
+          } else if (openJobs === bestOpen && solvedJobs < bestSolved) {
+            bestSolved = solvedJobs;
+            bestId = id;
+          }
+        }
+
+        assignedTo = bestId;
+        status = "in-progress";
+        autoAssigned = true;
+      }
+    }
+
     const request = await Request.create({
       subject,
       type,
       equipment,
       team: eq.assignedTeam._id,
       scheduledDate,
-      createdBy: req.user.id
+      createdBy: req.user.id,
+      assignedTo,
+      status,
+      autoAssigned,
     });
 
     res.status(201).json(request);
@@ -257,7 +308,71 @@ export const getAllRequestsAdmin = async (req, res) => {
         .populate("assignedTo", "name email")
         .populate("createdBy", "name email")
         .select(
-          "subject type priority status scheduledDate duration aiExplanation createdAt equipment team assignedTo createdBy"
+          "subject type priority status scheduledDate duration aiExplanation createdAt equipment team assignedTo createdBy autoAssigned"
+        ),
+      Request.countDocuments(filter),
+    ]);
+
+    res.json({
+      items,
+      page: safePage,
+      pageSize: safePageSize,
+      total,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getMyRequests = async (req, res) => {
+  try {
+    const {
+      status,
+      priority,
+      type,
+      q,
+      page = "1",
+      pageSize = "50",
+    } = req.query;
+
+    const filter = { createdBy: req.user.id };
+
+    if (status) {
+      const statuses = String(status)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (statuses.length) filter.status = { $in: statuses };
+    }
+
+    if (priority) {
+      const priorities = String(priority)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (priorities.length) filter.priority = { $in: priorities };
+    }
+
+    if (type) filter.type = String(type);
+
+    if (q) {
+      filter.subject = { $regex: String(q), $options: "i" };
+    }
+
+    const safePage = Math.max(1, Number(page) || 1);
+    const safePageSize = Math.min(200, Math.max(1, Number(pageSize) || 50));
+    const skip = (safePage - 1) * safePageSize;
+
+    const [items, total] = await Promise.all([
+      Request.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(safePageSize)
+        .populate("equipment", "name department location riskScore")
+        .populate("team", "name")
+        .populate("assignedTo", "name email")
+        .select(
+          "subject type priority status scheduledDate duration aiExplanation createdAt equipment team assignedTo autoAssigned"
         ),
       Request.countDocuments(filter),
     ]);

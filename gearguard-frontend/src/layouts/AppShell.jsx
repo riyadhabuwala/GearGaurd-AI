@@ -32,6 +32,12 @@ const RequestsIcon = () => (
   </svg>
 )
 
+const CalendarIcon = () => (
+  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+)
+
 const SearchIcon = () => (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -78,12 +84,21 @@ function getNav(role) {
     case 'technician':
       return [
         { to: '/technician', label: 'Assigned Jobs', icon: DashboardIcon },
+        { to: '/technician/work', label: 'My Work', icon: RequestsIcon },
+        { to: '/technician/kanban', label: 'Kanban Board', icon: RequestsIcon },
+        { to: '/technician/calendar', label: 'Calendar', icon: CalendarIcon },
         { to: '/technician/equipment', label: 'Equipment Status', icon: EquipmentIcon },
+        { to: '/technician/profile', label: 'Profile & Settings', icon: TeamsIcon },
+        { to: '/technician/notifications', label: 'Notifications', icon: BellIcon },
+        { to: '/technician/analytics', label: 'Analytics', icon: DashboardIcon },
+        { to: '/technician/help', label: 'Help & KB', icon: RequestsIcon },
       ]
     case 'employee':
       return [
         { to: '/employee', label: 'My Tickets', icon: RequestsIcon },
         { to: '/employee/submit', label: 'Submit Ticket', icon: RequestsIcon },
+        { to: '/employee/profile', label: 'Profile & Settings', icon: TeamsIcon },
+        { to: '/employee/notifications', label: 'Notifications', icon: BellIcon },
       ]
     default:
       return []
@@ -241,10 +256,18 @@ export default function AppShell() {
                     {role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Workspace'}
                   </h1>
                   <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                    {location.pathname.includes('equipment') ? 'Equipment Management' :
-                     location.pathname.includes('teams') ? 'Team Management' :
-                     location.pathname.includes('tickets') || location.pathname.includes('requests') ? 'Request Management' :
-                     'Dashboard Overview'}
+                                        {location.pathname.includes('equipment') ? 'Equipment Management' :
+                                        location.pathname.includes('teams') ? 'Team Management' :
+                                        location.pathname.includes('profile') ? 'Profile Settings' :
+                                        location.pathname.includes('notifications') ? 'Notifications Center' :
+                                        location.pathname.includes('analytics') ? 'Performance Analytics' :
+                                        location.pathname.includes('help') ? 'Help Center' :
+                                        location.pathname.includes('work') ? 'Work Queue' :
+                                        location.pathname.includes('kanban') ? 'Kanban Board' :
+                                        location.pathname.includes('calendar') ? 'Calendar Schedule' :
+                                        location.pathname.includes('submit') ? 'Submit Request' :
+                                        location.pathname.includes('tickets') || location.pathname.includes('requests') ? 'Request Management' :
+                                        'Dashboard Overview'}
                   </p>
                 </div>
               </div>

@@ -115,6 +115,13 @@ function RequestDetails({
         <div className="text-xs font-semibold text-slate-600">Subject</div>
         <div className="mt-1 text-sm text-slate-900 font-medium">{selected.subject}</div>
         <div className="mt-1 text-xs text-slate-500">Created: {selected.createdAt ? new Date(selected.createdAt).toLocaleString() : '—'}</div>
+        {selected.autoAssigned ? (
+          <div className="mt-2">
+            <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-700">
+              Auto-assigned
+            </span>
+          </div>
+        ) : null}
       </div>
 
       <div className="grid gap-3">
