@@ -1,0 +1,240 @@
+3. Where token/user are saved (after login)
+File: src/utils/authStorage.js
+
+The key idea:
+
+After login, we store:
+gg_token (JWT string)
+gg_user (user JSON, includes role)
+Then later:
+
+http.js reads the token to attach auth headers
+AuthProvider reads user/token to know if you’re logged in
+
+
+
+
+4. The actual backend call (login)
+File: src/app/providers/AuthProvider.jsx
+
+The “connect to backend” line is:
+
+await http.post('/api/auth/login', { email, password })
+Why it works:
+
+http has baseURL set → points to your backend
+login endpoint returns { token, user }
+we store token/user
+now every future request automatically includes JWT
+The chain looks like this
+Login page submits email/password
+AuthProvider.login() calls:
+POST ${baseURL}/api/auth/login
+Backend responds:
+{ token: "...", user: { ..., role: "admin" } }
+Frontend saves:
+gg_token, gg_user
+From now on:
+http.get('/api/admin/dashboard') automatically sends:
+Authorization: Bearer <token>
+
+
+
+
+Yes — CORS is already being used in your backend.
+
+Your backend imports CORS and enables it globally with app.use(cors()); in server.js:1-16.
+That means the browser is allowed to call your API from a different origin (like Vite on http://localhost:5174) without getting blocked by the browser’s CORS policy.
+What CORS actually means (in simple terms)
+
+CORS is a browser security rule, not an Axios rule.
+If your frontend is running on http://localhost:5174 and backend on http://localhost:5000, that’s “cross-origin”.
+Without CORS enabled on the backend, the browser blocks frontend JS from reading the response.
+
+Your current setup
+
+app.use(cors()) (no options) typically allows requests from any origin in dev.
+So your frontend can safely call:
+POST http://localhost:5000/api/auth/login
+GET http://localhost:5000/api/equipment, etc.
+Best practice (production-grade)
+Right now it’s permissive (good for dev). For production, you usually lock it down:
+
+(And add your deployed frontend domain later.)
+
+Alternative dev approach (optional): Vite proxy
+Instead of relying on CORS in dev, you can proxy /api through Vite so the browser thinks it’s same-origin. That would be a change in vite.config.js. This is optional since your backend already enables CORS.
+
+
+
+
+
+
+
+
+After login, the redirect decision happens in two places:
+
+the route-guard (ProtectedRoute) decides where unauthenticated users go
+the Login page decides where authenticated users go after successful login
+I’ll explain both carefully, step-by-step.
+
+A) When you try to open a protected page (before login)
+File: src/pages/auth/ProtectedRoute.jsx
+
+What it does
+If you try to open /admin (or any protected route) while not logged in:
+
+ProtectedRoute checks auth state from AuthProvider
+Since you’re not authenticated, it redirects you to /login
+Important: it also stores “where you were trying to go” inside router state:
+state.from = location
+That’s this line:
+
+return <Navigate to="/login" replace state={{ from: location }} />
+Why this matters
+This is how we support:
+“Login first, then take me back to the page I wanted”.
+
+So if you hit /admin/tickets without a token, after login you will be returned to /admin/tickets automatically.
+
+B) What happens after you click “Sign in” on the login page
+File: src/pages/auth/Login.jsx
+
+1) Capturing the “return to where I came from”
+At the top, we read router state:
+
+const location = useLocation()
+Then we compute:
+
+const stateFrom = location.state?.from?.pathname
+from = stateFrom (or null)
+Meaning:
+
+If you got redirected to /login by ProtectedRoute, from will contain the original URL like /admin/tickets.
+If you opened /login directly, from will be null.
+2) Submitting login
+When you submit, it calls:
+
+const { user } = await login({ email, password })
+This login() comes from AuthProvider and makes this backend call:
+
+POST /api/auth/login
+Backend returns:
+
+token
+user (contains role)
+AuthProvider stores these in localStorage and updates React state.
+
+3) Redirect logic after successful login
+Right after login succeeds:
+
+If from exists → go back to the original page:
+
+navigate(from, { replace: true })
+Else (no from) → redirect based on user.role:
+
+admin → /admin
+technician → /technician
+employee → /employee
+anything else → /unauthorized
+That’s the main “post-login router decision”.
+
+So the logic priority is:
+
+redirectTarget
+=
+{
+from
+if from exists
+/
+a
+d
+m
+i
+n
+if role = admin
+/
+t
+e
+c
+h
+n
+i
+c
+i
+a
+n
+if role = technician
+/
+e
+m
+p
+l
+o
+y
+e
+e
+if role = employee
+/
+u
+n
+a
+u
+t
+h
+o
+r
+i
+z
+e
+d
+otherwise
+redirectTarget= 
+⎩
+⎨
+⎧
+​
+  
+from
+/admin
+/technician
+/employee
+/unauthorized
+​
+  
+if from exists
+if role = admin
+if role = technician
+if role = employee
+otherwise
+​
+ 
+4) What if the user is already logged in and visits /login?
+At the top of the Login component there is also:
+
+if (isAuthenticated) return <Navigate ... />
+So if you already have a saved token/user, you won’t stay on /login. You’ll be redirected:
+
+to from (if it exists), else to role home.
+This prevents logged-in users from seeing the login page again.
+
+C) Role-based routes (why you can’t access other dashboards)
+Routes are grouped in src/app/router.jsx
+
+Example:
+
+Admin routes are wrapped in:
+<ProtectedRoute allowedRoles={['admin']} />
+So even if an Employee logs in and manually types /admin:
+
+ProtectedRoute sees role mismatch
+redirects to /unauthorized
+Real example scenarios
+Scenario 1: You open /admin directly (not logged in)
+ProtectedRoute → sends you to /login with state.from = '/admin'
+You login as Admin → login page sees from='/admin' → redirects back to /admin
+Scenario 2: You open /login directly
+No from in state
+You login as Technician → redirect to /technician
+Scenario 3: You login as Employee then type /admin
+ProtectedRoute checks role → redirects to /unauthorized

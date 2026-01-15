@@ -1,8 +1,7 @@
-
 export default function App() {
   return (
-   <>
-   <h1>hello world</h1>
-   </>
+    <div className="p-6 text-slate-700">
+      This app is routed via <span className="font-medium">src/main.jsx</span>.
+    </div>
   )
 }

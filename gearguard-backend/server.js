@@ -9,6 +9,8 @@ import teamRoutes from "./routes/teamRoutes.js";
 import requestRoutes from "./routes/requestRoutes.js";
 import sensorRoutes from "./routes/sensorRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -43,3 +45,7 @@ app.use("/api/requests", requestRoutes);
 app.use("/api/sensors", sensorRoutes);
 
 app.use("/api/ai", aiRoutes);
+
+app.use("/api/admin", adminRoutes);
+
+app.use("/api/users", userRoutes);

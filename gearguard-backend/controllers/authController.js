@@ -6,7 +6,12 @@ export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    const existing = await User.findOne({ email });
+    const safeEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    if (!safeEmail) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const existing = await User.findOne({ email: safeEmail });
     if (existing) {
       return res.status(400).json({ message: "Email already exists" });
     }
@@ -15,7 +20,7 @@ export const register = async (req, res) => {
 
     const user = await User.create({
       name,
-      email,
+      email: safeEmail,
       password: hashed,
       role
     });
@@ -30,7 +35,13 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const safeEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    if (!safeEmail) return res.status(400).json({ message: "Email is required" });
+
+    // Case-insensitive fallback for legacy users created before email normalization
+    const user =
+      (await User.findOne({ email: safeEmail })) ||
+      (await User.findOne({ email: new RegExp(`^${safeEmail.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")}$`, "i") }));
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const match = await bcrypt.compare(password, user.password);
