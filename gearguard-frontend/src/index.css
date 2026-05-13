@@ -126,7 +126,6 @@ body {
 
 .sidebar-gradient {
   background: linear-gradient(180deg, var(--bg-sidebar) 0%, #0a0f1e 100%);
-  position: relative;
 }
 
 .sidebar-gradient::before {
@@ -307,6 +306,19 @@ button, a {
   /* Risk bars — give more room */
   .space-y-2 .h-3 {
     height: 0.5rem;
+  }
+
+  /* Sidebar — optimize animation and prevent interaction when off-screen */
+  aside {
+    will-change: transform;
+  }
+  aside.-translate-x-full {
+    pointer-events: none;
+  }
+
+  /* Main content — ensure full width on mobile */
+  main {
+    margin-left: 0 !important;
   }
 
   /* Sidebar logo area — smaller padding on mobile */

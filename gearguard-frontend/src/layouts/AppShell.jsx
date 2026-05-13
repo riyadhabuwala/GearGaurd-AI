@@ -134,110 +134,112 @@ export default function AppShell() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-app)' }}>
-      <div className="flex">
-        {/* Sidebar */}
-        <aside
-          className={classNames(
-            'fixed lg:sticky top-0 h-screen z-40 transition-all duration-300',
-            'flex flex-col sidebar-gradient',
-            sidebarCollapsed ? 'w-20' : 'w-64 lg:w-72',
-            'max-w-[75vw] lg:max-w-none',
-            mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-          )}
-          style={{ boxShadow: 'var(--shadow-sidebar)' }}
-        >
-          {/* Logo + Close button on mobile */}
-          <div className="p-4 lg:p-6 border-b flex items-center justify-between" style={{ borderColor: 'var(--border-sidebar)' }}>
-            <GearGuardLogo collapsed={sidebarCollapsed} />
-            <button
-              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-              onClick={() => setMobileOpen(false)}
-              aria-label="Close menu"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/50 z-30 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
 
-          {/* Navigation */}
-          <nav className="flex-1 p-3 lg:p-4 overflow-y-auto">
-            <div className={classNames('px-3 py-1.5 lg:py-2 mb-1.5 lg:mb-2 text-xs font-semibold uppercase tracking-wider', sidebarCollapsed ? 'text-center' : '', 'text-slate-500')}>
-              {sidebarCollapsed ? '•' : 'Navigation'}
-            </div>
-            <ul className="space-y-1">
-              {nav.map((item) => {
-                const Icon = item.icon
-                return (
-                  <li key={item.to}>
-                    <NavLink
-                      to={item.to}
-                      className={({ isActive }) =>
-                        classNames(
-                          'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
-                          isActive
-                            ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-900/50'
-                            : 'text-slate-400 hover:bg-slate-800 hover:bg-opacity-60 hover:text-slate-200',
-                          sidebarCollapsed && 'justify-center'
-                        )
-                      }
-                      onClick={() => setMobileOpen(false)}
-                      end
-                      title={sidebarCollapsed ? item.label : ''}
-                    >
-                      <Icon />
-                      {!sidebarCollapsed && <span>{item.label}</span>}
-                    </NavLink>
-                  </li>
-                )
-              })}
-            </ul>
-          </nav>
-
-          {/* User section */}
-          <div className="p-3 lg:p-4" style={{ borderTop: '1px solid var(--border-sidebar)' }}>
-            {!sidebarCollapsed ? (
-              <div className="rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 p-3.5 border shadow-lg" style={{ borderColor: 'var(--border-sidebar)', boxShadow: 'var(--shadow-inset), 0 4px 12px rgba(0,0,0,0.2)' }}>
-                <div className="flex items-center gap-3">
-                  <div className={classNames('h-10 w-10 rounded-full grid place-items-center text-white font-semibold shadow-lg ring-2 ring-white ring-opacity-20', getRoleBadgeColor(role))}>
-                    {(user?.name || 'U')[0].toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-white truncate">{user?.name || user?.email || 'User'}</div>
-                    <div className="text-xs truncate" style={{ color: 'var(--text-sidebar)' }}>{role || 'unknown'}</div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className={classNames('h-10 w-10 mx-auto rounded-full grid place-items-center text-white font-semibold shadow-lg', getRoleBadgeColor(role))}>
-                {(user?.name || 'U')[0].toUpperCase()}
-              </div>
-            )}
-          </div>
-
-          {/* Collapse toggle (desktop only) */}
+      {/* Sidebar — fixed overlay on mobile, sticky in flex flow on desktop */}
+      <aside
+        className={classNames(
+          'fixed top-0 left-0 h-screen z-40 transition-all duration-300',
+          'flex flex-col sidebar-gradient',
+          sidebarCollapsed ? 'w-20' : 'w-64 lg:w-72',
+          'max-w-[75vw] lg:max-w-none',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        )}
+        style={{ boxShadow: 'var(--shadow-sidebar)' }}
+      >
+        {/* Logo + Close button on mobile */}
+        <div className="p-4 lg:p-6 border-b flex items-center justify-between" style={{ borderColor: 'var(--border-sidebar)' }}>
+          <GearGuardLogo collapsed={sidebarCollapsed} />
           <button
-            className="hidden lg:flex items-center justify-center p-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 hover:bg-opacity-40 transition-all"
-            style={{ borderTop: '1px solid var(--border-sidebar)' }}
-            onClick={() => setSidebarCollapsed((v) => !v)}
-            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close menu"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sidebarCollapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'} />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </aside>
+        </div>
 
-        {/* Mobile overlay */}
-        {mobileOpen && (
-          <div
-            className="fixed inset-0 bg-slate-900/50 z-30 lg:hidden"
-            onClick={() => setMobileOpen(false)}
-          />
-        )}
+        {/* Navigation */}
+        <nav className="flex-1 p-3 lg:p-4 overflow-y-auto">
+          <div className={classNames('px-3 py-1.5 lg:py-2 mb-1.5 lg:mb-2 text-xs font-semibold uppercase tracking-wider', sidebarCollapsed ? 'text-center' : '', 'text-slate-500')}>
+            {sidebarCollapsed ? '•' : 'Navigation'}
+          </div>
+          <ul className="space-y-1">
+            {nav.map((item) => {
+              const Icon = item.icon
+              return (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    className={({ isActive }) =>
+                      classNames(
+                        'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                        isActive
+                          ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-900/50'
+                          : 'text-slate-400 hover:bg-slate-800 hover:bg-opacity-60 hover:text-slate-200',
+                        sidebarCollapsed && 'justify-center'
+                      )
+                    }
+                    onClick={() => setMobileOpen(false)}
+                    end
+                    title={sidebarCollapsed ? item.label : ''}
+                  >
+                    <Icon />
+                    {!sidebarCollapsed && <span>{item.label}</span>}
+                  </NavLink>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
 
-        {/* Main content */}
-        <main className={classNames('flex-1 min-w-0 transition-all duration-300', sidebarCollapsed ? 'lg:ml-0' : 'lg:ml-0')}>
+        {/* User section */}
+        <div className="p-3 lg:p-4" style={{ borderTop: '1px solid var(--border-sidebar)' }}>
+          {!sidebarCollapsed ? (
+            <div className="rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 p-3.5 border shadow-lg" style={{ borderColor: 'var(--border-sidebar)', boxShadow: 'var(--shadow-inset), 0 4px 12px rgba(0,0,0,0.2)' }}>
+              <div className="flex items-center gap-3">
+                <div className={classNames('h-10 w-10 rounded-full grid place-items-center text-white font-semibold shadow-lg ring-2 ring-white ring-opacity-20', getRoleBadgeColor(role))}>
+                  {(user?.name || 'U')[0].toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-white truncate">{user?.name || user?.email || 'User'}</div>
+                  <div className="text-xs truncate" style={{ color: 'var(--text-sidebar)' }}>{role || 'unknown'}</div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className={classNames('h-10 w-10 mx-auto rounded-full grid place-items-center text-white font-semibold shadow-lg', getRoleBadgeColor(role))}>
+              {(user?.name || 'U')[0].toUpperCase()}
+            </div>
+          )}
+        </div>
+
+        {/* Collapse toggle (desktop only) */}
+        <button
+          className="hidden lg:flex items-center justify-center p-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 hover:bg-opacity-40 transition-all"
+          style={{ borderTop: '1px solid var(--border-sidebar)' }}
+          onClick={() => setSidebarCollapsed((v) => !v)}
+          title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={sidebarCollapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'} />
+          </svg>
+        </button>
+      </aside>
+
+      {/* Main content — full width on mobile, offset by sidebar on desktop */}
+      <main className={classNames(
+        'min-h-screen transition-all duration-300 ml-0 w-full',
+        sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-72'
+      )}>
           {/* Top bar */}
           <header className="sticky top-0 z-20 bg-white border-b shadow-sm" style={{ borderColor: 'var(--border-light)', backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
             <div className="px-2 sm:px-4 md:px-6 py-2 sm:py-3.5 flex items-center justify-between gap-1.5 sm:gap-4">
@@ -322,8 +324,7 @@ export default function AppShell() {
           <div className="p-3 sm:p-4 md:p-6">
             <Outlet />
           </div>
-        </main>
-      </div>
+      </main>
     </div>
   )
 }
