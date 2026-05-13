@@ -140,22 +140,32 @@ export default function AppShell() {
           className={classNames(
             'fixed lg:sticky top-0 h-screen z-40 transition-all duration-300',
             'flex flex-col sidebar-gradient',
-            sidebarCollapsed ? 'w-20' : 'w-72',
+            sidebarCollapsed ? 'w-20' : 'w-64 lg:w-72',
+            'max-w-[75vw] lg:max-w-none',
             mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           )}
           style={{ boxShadow: 'var(--shadow-sidebar)' }}
         >
-          {/* Logo */}
-          <div className="p-6 border-b" style={{ borderColor: 'var(--border-sidebar)' }}>
+          {/* Logo + Close button on mobile */}
+          <div className="p-4 lg:p-6 border-b flex items-center justify-between" style={{ borderColor: 'var(--border-sidebar)' }}>
             <GearGuardLogo collapsed={sidebarCollapsed} />
+            <button
+              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 overflow-y-auto">
-            <div className={classNames('px-3 py-2 mb-2 text-xs font-semibold uppercase tracking-wider', sidebarCollapsed ? 'text-center' : '', 'text-slate-500')}>
+          <nav className="flex-1 p-3 lg:p-4 overflow-y-auto">
+            <div className={classNames('px-3 py-1.5 lg:py-2 mb-1.5 lg:mb-2 text-xs font-semibold uppercase tracking-wider', sidebarCollapsed ? 'text-center' : '', 'text-slate-500')}>
               {sidebarCollapsed ? '•' : 'Navigation'}
             </div>
-            <ul className="space-y-1.5">
+            <ul className="space-y-1">
               {nav.map((item) => {
                 const Icon = item.icon
                 return (
@@ -185,7 +195,7 @@ export default function AppShell() {
           </nav>
 
           {/* User section */}
-          <div className="p-4" style={{ borderTop: '1px solid var(--border-sidebar)' }}>
+          <div className="p-3 lg:p-4" style={{ borderTop: '1px solid var(--border-sidebar)' }}>
             {!sidebarCollapsed ? (
               <div className="rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 p-3.5 border shadow-lg" style={{ borderColor: 'var(--border-sidebar)', boxShadow: 'var(--shadow-inset), 0 4px 12px rgba(0,0,0,0.2)' }}>
                 <div className="flex items-center gap-3">
@@ -230,19 +240,20 @@ export default function AppShell() {
         <main className={classNames('flex-1 min-w-0 transition-all duration-300', sidebarCollapsed ? 'lg:ml-0' : 'lg:ml-0')}>
           {/* Top bar */}
           <header className="sticky top-0 z-20 bg-white border-b shadow-sm" style={{ borderColor: 'var(--border-light)', backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
-            <div className="px-3 sm:px-4 md:px-6 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4">
-              <div className="flex-1 flex items-center gap-2 md:gap-4">
+            <div className="px-2 sm:px-4 md:px-6 py-2 sm:py-3.5 flex items-center justify-between gap-1.5 sm:gap-4">
+              {/* Left: hamburger + title */}
+              <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
                 <button
-                  className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-slate-500 hover:bg-slate-100"
+                  className="lg:hidden inline-flex items-center justify-center p-1.5 sm:p-2 rounded-lg text-slate-500 hover:bg-slate-100 flex-shrink-0"
                   onClick={() => setMobileOpen((v) => !v)}
                 >
                   <MenuIcon />
                 </button>
                 <div className="min-w-0">
-                  <h1 className="text-base sm:text-lg font-bold truncate" style={{ color: 'var(--text-primary)' }}>
+                  <h1 className="text-sm sm:text-lg font-bold truncate" style={{ color: 'var(--text-primary)' }}>
                     {role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Workspace'}
                   </h1>
-                  <p className="hidden sm:block text-sm" style={{ color: 'var(--text-muted)' }}>
+                  <p className="hidden md:block text-sm" style={{ color: 'var(--text-muted)' }}>
                                         {location.pathname.includes('equipment') ? 'Equipment Management' :
                                         location.pathname.includes('teams') ? 'Team Management' :
                                         location.pathname.includes('profile') ? 'Profile Settings' :
@@ -259,7 +270,7 @@ export default function AppShell() {
                 </div>
               </div>
 
-              {/* Search bar */}
+              {/* Center: Search bar (desktop only) */}
               <div className="hidden md:flex items-center flex-1 max-w-lg">
                 <div className="relative w-full">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" style={{ color: 'var(--text-muted)' }}>
@@ -278,15 +289,15 @@ export default function AppShell() {
                 </div>
               </div>
 
-              {/* Actions */}
-              <div className="flex items-center gap-2">
+              {/* Right: actions */}
+              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                 {/* Notifications */}
-                <button className="relative p-2.5 rounded-xl hover:bg-slate-50 transition-all" style={{ color: 'var(--text-secondary)' }}>
+                <button className="relative p-1.5 sm:p-2.5 rounded-xl hover:bg-slate-50 transition-all" style={{ color: 'var(--text-secondary)' }}>
                   <BellIcon />
-                  <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+                  <span className="absolute top-1 right-1 sm:top-2 sm:right-2 h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
                 </button>
 
-                {/* User menu */}
+                {/* User menu (desktop only) */}
                 <div className="hidden lg:flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 cursor-pointer transition-all">
                   <div className={classNames('h-9 w-9 rounded-full grid place-items-center text-white text-sm font-semibold shadow-sm', getRoleBadgeColor(role))}>
                     {(user?.name || 'U')[0].toUpperCase()}
@@ -299,7 +310,7 @@ export default function AppShell() {
 
                 <button
                   onClick={onLogout}
-                  className="rounded-xl bg-slate-900 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white hover:bg-slate-800 shadow-sm transition-all hover:shadow-md"
+                  className="rounded-xl bg-slate-900 px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white hover:bg-slate-800 shadow-sm transition-all hover:shadow-md"
                 >
                   Logout
                 </button>
