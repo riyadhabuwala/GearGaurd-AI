@@ -303,27 +303,27 @@ export default function AdminEquipment() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 shadow-lg shadow-cyan-600/30">
-              <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 shadow-lg shadow-cyan-600/30">
+              <svg className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
               </svg>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold text-slate-900">Equipment</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Equipment</h1>
                 <div className="flex items-center gap-1.5 rounded-lg bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
                   Live
                 </div>
               </div>
-              <p className="mt-1 text-sm text-slate-600">Manage assets, update assignments, and review maintenance history</p>
+              <p className="mt-1 text-xs sm:text-sm text-slate-600">Manage assets, update assignments, and review maintenance history</p>
             </div>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3 flex-wrap">
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:shadow"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:shadow"
             onClick={openAdd}
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -333,7 +333,7 @@ export default function AdminEquipment() {
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-indigo-600/30 transition-all hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-white shadow-lg shadow-indigo-600/30 transition-all hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={openEdit}
             disabled={!selected}
           >

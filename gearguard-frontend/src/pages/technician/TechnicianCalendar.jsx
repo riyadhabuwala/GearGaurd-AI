@@ -212,9 +212,9 @@ export default function TechnicianCalendar() {
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-2 mt-2">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2 mt-2">
             {Array.from({ length: startDay }).map((_, i) => (
-              <div key={`blank-${i}`} className="h-20" />
+              <div key={`blank-${i}`} className="h-12 sm:h-20" />
             ))}
             {monthKeys.map((key, index) => {
               const dayNumber = index + 1
@@ -227,7 +227,7 @@ export default function TechnicianCalendar() {
                   type="button"
                   onClick={() => setSelectedDate(key)}
                   className={classNames(
-                    'h-20 rounded-xl border text-left p-2 transition-all',
+                    'h-12 sm:h-20 rounded-lg sm:rounded-xl border text-left p-1 sm:p-2 transition-all',
                     isSelected ? 'border-indigo-400 bg-indigo-50' : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
                   )}
                 >
@@ -241,7 +241,7 @@ export default function TechnicianCalendar() {
                       </span>
                     ) : null}
                   </div>
-                  <div className="mt-3 flex flex-wrap gap-1">
+                  <div className="mt-1 sm:mt-3 flex-wrap gap-1 hidden sm:flex">
                     {count > 0 ? (
                       <span className="h-1.5 w-6 rounded-full bg-purple-300" />
                     ) : (

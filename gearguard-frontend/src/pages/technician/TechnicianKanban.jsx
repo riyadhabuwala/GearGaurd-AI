@@ -164,7 +164,7 @@ export default function TechnicianKanban() {
         </div>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {columns.map((col) => (
           <div key={col.key} className="card-enterprise p-4">
             <div className="flex items-center justify-between">

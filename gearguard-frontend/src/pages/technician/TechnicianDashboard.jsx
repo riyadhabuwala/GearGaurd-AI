@@ -79,7 +79,7 @@ export default function TechnicianDashboard() {
   }, [calendar])
 
   return (
-    <div className="space-y-6 p-6" style={{ background: 'var(--bg-app)' }}>
+    <div className="space-y-4 sm:space-y-6" style={{ background: 'var(--bg-app)' }}>
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">

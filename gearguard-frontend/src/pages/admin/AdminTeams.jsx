@@ -423,20 +423,20 @@ export default function AdminTeams() {
     <div className="h-full">
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900">Team Management</h1>
+            <div className="flex items-center gap-3 flex-wrap">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Team Management</h1>
               <span className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold">
                 {rows.length} {rows.length === 1 ? 'Team' : 'Teams'}
               </span>
             </div>
             <p className="mt-2 text-sm text-slate-600">Manage technician teams and assignments</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button
               type="button"
-              className="card-enterprise px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-slate-900"
+              className="card-enterprise px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-700 hover:text-slate-900"
               onClick={openCreate}
             >
               <span className="flex items-center gap-2">
@@ -448,7 +448,7 @@ export default function AdminTeams() {
             </button>
             <button
               type="button"
-              className="px-4 py-2.5 text-sm font-medium rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm disabled:opacity-50 transition-all"
+              className="px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm disabled:opacity-50 transition-all"
               onClick={openAddMember}
               disabled={!selected}
             >
@@ -461,7 +461,7 @@ export default function AdminTeams() {
             </button>
             <button
               type="button"
-              className="card-enterprise px-4 py-2.5 text-sm font-medium text-slate-700 hover:text-slate-900"
+              className="card-enterprise px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-700 hover:text-slate-900"
               onClick={openCreateUser}
             >
               Create User

@@ -44,7 +44,7 @@ function StatCard({ label, value, hint, tone = 'brand', icon }) {
         <div className="flex-1">
           <p className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>{label}</p>
           <div className="mt-3 flex items-baseline gap-2">
-            <h3 className="text-4xl font-bold" style={{ color: 'var(--text-primary)' }}>{value}</h3>
+            <h3 className="text-2xl sm:text-4xl font-bold" style={{ color: 'var(--text-primary)' }}>{value}</h3>
           </div>
           {hint && <p className="mt-2 text-xs" style={{ color: 'var(--text-muted)' }}>{hint}</p>}
         </div>
@@ -308,7 +308,7 @@ export default function AdminDashboard() {
   }, [data])
 
   return (
-    <div className="space-y-6 p-6" style={{ background: 'var(--bg-app)' }}>
+    <div className="space-y-4 sm:space-y-6" style={{ background: 'var(--bg-app)' }}>
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
@@ -316,7 +316,7 @@ export default function AdminDashboard() {
             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
             <span className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>Live Dashboard</span>
           </div>
-          <h1 className="mt-2 text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="mt-2 text-xl sm:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
             Command Center
           </h1>
           <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -550,7 +550,7 @@ export default function AdminDashboard() {
       ) : null}
 
       {/* Key Metrics */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Total Equipment"
           value={isLoading ? '—' : String(riskTotal)}

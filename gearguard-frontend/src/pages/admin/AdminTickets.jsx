@@ -518,7 +518,7 @@ export default function AdminTickets() {
             </select>
           </div>
 
-          <div className="md:col-span-4 flex items-center justify-between">
+          <div className="md:col-span-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="text-xs text-slate-500">
               Page {page} {isLoading ? '' : `• Showing ${rows.length} items`}
               {filters.equipmentId ? (
@@ -528,7 +528,7 @@ export default function AdminTickets() {
                 </>
               ) : null}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {filters.equipmentId ? (
                 <button
                   type="button"
