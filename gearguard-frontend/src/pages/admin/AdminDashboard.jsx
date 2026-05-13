@@ -323,9 +323,9 @@ export default function AdminDashboard() {
             Real-time operational insights powered by AI and IoT sensors
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           <button
-            className="px-4 py-2.5 rounded-xl text-sm font-medium transition-all border shadow-sm hover:shadow-md"
+            className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-sm font-medium transition-all border shadow-sm hover:shadow-md justify-center items-center flex"
             style={{ 
               borderColor: 'var(--border-light)',
               color: 'var(--text-secondary)',
@@ -340,7 +340,7 @@ export default function AdminDashboard() {
             Add Equipment
           </button>
           <button
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-sm font-medium text-white shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 sm:flex-none justify-center items-center flex px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-sm font-medium text-white shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={openAssignTechnician}
             type="button"
             disabled={assignableTickets.length === 0 || technicians.length === 0}

@@ -54,14 +54,14 @@ export default function Login() {
     <div className="min-h-screen bg-slate-50 grid place-items-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-6 text-center">
-          <div className="mx-auto h-12 w-12 rounded-2xl bg-brand-600 text-white grid place-items-center font-semibold">
+          <div className="mx-auto h-12 w-12 rounded-2xl bg-brand-600 text-white grid place-items-center font-semibold text-lg">
             GG
           </div>
-          <h1 className="mt-4 text-2xl font-semibold text-slate-900">Sign in to GearGuard</h1>
+          <h1 className="mt-4 text-xl sm:text-2xl font-semibold text-slate-900">Sign in to GearGuard</h1>
           <p className="mt-2 text-sm text-slate-600">AI-powered industrial maintenance operations.</p>
         </div>
 
-        <form onSubmit={onSubmit} className="rounded-2xl bg-white p-6 shadow-card border border-slate-100">
+        <form onSubmit={onSubmit} className="rounded-2xl bg-white p-4 sm:p-6 shadow-card border border-slate-100">
           {error ? (
             <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
               {error}

@@ -134,25 +134,6 @@ export default function AppShell() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-app)' }}>
-      {/* Mobile Header */}
-      <div className="lg:hidden sticky top-0 z-30 border-b glass shadow-sm">
-        <div className="px-4 py-3 flex items-center justify-between">
-          <button
-            className="inline-flex items-center justify-center rounded-lg bg-white px-3 py-2 text-sm hover:bg-slate-50 shadow-sm border border-slate-200"
-            onClick={() => setMobileOpen((v) => !v)}
-          >
-            <MenuIcon />
-          </button>
-          <GearGuardLogo />
-          <button
-            className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm text-white hover:bg-indigo-700 shadow-sm"
-            onClick={onLogout}
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-
       <div className="flex">
         {/* Sidebar */}
         <aside
@@ -249,8 +230,14 @@ export default function AppShell() {
         <main className={classNames('flex-1 min-w-0 transition-all duration-300', sidebarCollapsed ? 'lg:ml-0' : 'lg:ml-0')}>
           {/* Top bar */}
           <header className="sticky top-0 z-20 bg-white border-b shadow-sm" style={{ borderColor: 'var(--border-light)', backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
-            <div className="px-6 py-3.5 flex items-center justify-between gap-4">
-              <div className="flex-1 flex items-center gap-4">
+            <div className="px-4 md:px-6 py-3.5 flex items-center justify-between gap-4">
+              <div className="flex-1 flex items-center gap-2 md:gap-4">
+                <button
+                  className="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-slate-500 hover:bg-slate-100"
+                  onClick={() => setMobileOpen((v) => !v)}
+                >
+                  <MenuIcon />
+                </button>
                 <div>
                   <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
                     {role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Workspace'}
